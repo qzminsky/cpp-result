@@ -59,7 +59,7 @@ auto main () -> int
 ```
 
 ## Improvements
-As you might have noticed, a returned result must be stored in separate object to operate with it further. Fortunately, the `result` class provides special helpers to simplify some cases:
+As you might have noticed, a returned result must be stored in separate object to operate with it further. Fortunately, the `result` class provides special helpers to simplify some use cases:
 ```C++
 div(1, 2).if_ok([](int res){ std::cout << "Division result is " << res; })
          .if_error([]{ std::cerr << "Division error!"; });
