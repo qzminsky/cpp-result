@@ -14,7 +14,6 @@ The Result monad implementation in C++
 > ⚠️ *Note that the library requires C++17 support*
 
 ### `result.inl`
-
 The file `result.inl` contains two pretty constructors that duplicate corresponding static member functions in the `result` class. Just compare:
 
 ```C++
@@ -30,7 +29,6 @@ if (func() == Error(1)) { ... }
 The short form looks much prettier, isn't it? Sadly, these functions has very short names in global scope, so, they were brought into a separate optional header.
 
 ## Usage example
-
 ```C++
 // Divide x by y or return an error if y == 0
 auto div (int x, int y) -> result<int, std::runtime_error>
@@ -52,8 +50,12 @@ auto main () -> int
 ```
 
 ## Improvements
-
-
+As you might have noticed, a returned result must be stored in separate object to operate with it further. Fortunately, the `result` class provides special helpers to simplify some cases:
+```C++
+div(1, 2).if_ok([](int res){ std::cout << "Division result is " << res; })
+         .if_error([]{ std::cerr << "Division error!"; });
+```
+These helpers — `if_ok` and `if_error` — takes a functional parameter with own optional parameter. If the exact value is not important, this parameter can be omitted.
 
 ## License
 See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
