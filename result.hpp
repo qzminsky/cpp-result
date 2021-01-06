@@ -21,6 +21,13 @@ static_assert(__cplusplus >= 2017'00, "C++17 or higher is required");
 #   include <concepts>
 #endif
 
+/**
+ * \class result
+ *
+ * \brief Result monad implementation
+ *
+ * \details Stores an ok/error-state with corresponding value
+*/
 template <typename Ok_t = std::monostate,
           typename Error_t = std::monostate
 >
