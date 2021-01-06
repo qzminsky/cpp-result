@@ -34,6 +34,8 @@ The short form looks much prettier, isn't it? Sadly, these functions has very sh
 auto div (int x, int y) -> result<int, std::runtime_error>
 {
   return (y == 0) ? Error("Zero division!"s) : Ok(x / y);
+  //                                      ↑
+  //          The result type is based on std::variant and can't take arrays
 }
 
 auto main () -> int
