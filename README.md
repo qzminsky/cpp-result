@@ -27,14 +27,27 @@ return Ok(0);
 if (func() == Error(1)) { ... }
 ```
 
-The short form looks much prettier, isn't it?
+The short form looks much prettier, isn't it? Sadly, these functions has very short names in global scope, so, they were brought into a separate optional header.
 
 ## Usage example
 
 ```C++
-auto func () -> result<int, std::string>
+// Divide x by y or return an error if y == 0
+auto div (int x, int y) -> result<int, std::runtime_error>
 {
+  return (y == 0) ? Error("Zero division!"s) : Ok(x / y);
+}
 
+auto main () -> int
+{
+  // Check a result state and extract its value if appropriate
+  if (auto res = div(1, 2); res.is_ok()) {
+    std::cout << res.as_ok() << std::endl;
+  }
+  
+  // Combined state-value checking
+  assert(div(10, 3).is_ok(3));
+  assert(div(10, 3) == Ok(3));
 }
 ```
 
