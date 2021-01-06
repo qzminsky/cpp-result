@@ -35,9 +35,14 @@ auto div (int x, int y) -> result<int, std::runtime_error>
 {
   using namespace std::string_literals;
   
-  return (y == 0) ? Error("Zero division!"s) : Ok(x / y);
-  //                                      ↑
-  //          The result type is based on std::variant and can't take arrays
+// return (y == 0) ? Error(...) : Ok(...);  // Wrong: different types!
+  
+  if (y != 0) {
+    return Ok(x / y);
+  }
+  return Error("Zero division!"s)
+  //                           ↑
+  // The result type is based on std::variant and can't take arrays
 }
 
 auto main () -> int
