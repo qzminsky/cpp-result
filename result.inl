@@ -22,6 +22,7 @@ static_assert(__cplusplus >= 2017'00, "C++17 or higher is required");
  * \param val Success value stored in result
 */
 template <typename T>
+[[nodiscard]]
 inline auto Ok (T const& val)
 {
     return result<>::ok(val);
@@ -33,6 +34,7 @@ inline auto Ok (T const& val)
  * \param val Failure value stored in result
 */
 template <typename T>
+[[nodiscard]]
 inline auto Error (T const& val)
 {
     return result<>::error(val);
