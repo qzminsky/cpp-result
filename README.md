@@ -40,7 +40,7 @@ auto div (int x, int y) -> result<int, std::runtime_error>
   if (y != 0) {
     return Ok(x / y);
   }
-  return Error("Zero division!"s)
+  return Error("Zero division!"s);
   //                           ↑
   // The result type is based on std::variant and can't take arrays
 }
