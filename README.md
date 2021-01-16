@@ -1,6 +1,6 @@
 # cpp-result
 
-![version](https://img.shields.io/badge/version-0.1-brightgreen)
+![version](https://img.shields.io/badge/version-1.0-brightgreen)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE.md)
 ![cpp-version](https://img.shields.io/badge/C%2B%2B-≥17-blue)
 
@@ -49,12 +49,15 @@ auto main () -> int
 {
   // Check a result state and extract its value if appropriate
   if (auto res = div(1, 2); res.is_ok()) {
-    std::cout << res.as_ok() << std::endl;
+    std::cout << res.unwrap() << std::endl;
   }
   
   // Combined state-value checking
   assert(div(10, 3).is_ok(3));
   assert(div(10, 3) == Ok(3));
+  
+  // "Silent" error handling
+  assert(div(1, 0).unwrap_or(-1), -1);
 }
 ```
 
