@@ -6,8 +6,8 @@
 /// \brief Result variant type
 ///
 /// \author https://github.com/qzminsky
-/// \version 0.1.0
-/// \date 2021/01/06
+/// \version 1.0.0
+/// \date 2021/01/16
 
 #ifndef RESULT_H
 #define RESULT_H
@@ -93,7 +93,7 @@ public:
     template <typename Copy_Ok_t>
     auto operator = (result<Copy_Ok_t, std::monostate> const& other) -> result&
     {
-        _value.template emplace<0>(other.as_ok());
+        _value.template emplace<0>(other.unwrap());
         return *this;
     }
 
@@ -105,7 +105,7 @@ public:
     template <typename Copy_Error_t>
     auto operator = (result<std::monostate, Copy_Error_t> const& other) -> result&
     {
-        _value.template emplace<1>(other.as_error());
+        _value.template emplace<1>(other.unwrap_error());
         return *this;
     }
 
@@ -162,7 +162,7 @@ public:
         ) {
             return false;
         }
-        else return is_ok() && (as_ok() == val);
+        else return is_ok() && (unwrap() == val);
     }
 
     /**
@@ -178,7 +178,7 @@ public:
         ) {
             return false;
         }
-        else return is_error() && (as_error() == val);
+        else return is_error() && (unwrap_error() == val);
     }
 
     /**
@@ -201,7 +201,7 @@ public:
     [[nodiscard]]
     auto operator == (result<T1, T2> const& other) const noexcept -> bool
     {
-        return (is_ok() && other.is_ok(as_ok())) || (is_error() && other.is_error(as_error()));
+        return (is_ok() && other.is_ok(unwrap())) || (is_error() && other.is_error(unwrap_error()));
     }
 
 #if __cplusplus < 2020'00
@@ -226,7 +226,7 @@ public:
      * \throw std::bad_variant_access
     */
     [[nodiscard]]
-    auto as_ok () const -> ok_type
+    auto unwrap () const -> ok_type
     {
         return std::get<0>(_value);
     }
@@ -237,9 +237,20 @@ public:
      * \throw std::bad_variant_access
     */
     [[nodiscard]]
-    auto as_error () const -> error_type
+    auto unwrap_error () const -> error_type
     {
         return std::get<1>(_value);
+    }
+
+    /**
+     * \brief Extracts the stored vavlue in case of success result or a provided default otherwise
+     *
+     * \param def Default value for error case
+    */
+    [[nodiscard]]
+    auto unwrap_or (ok_type const& def) const -> ok_type
+    {
+        return is_ok() ? unwrap() : def;
     }
 
     /**
@@ -264,7 +275,7 @@ public:
             if constexpr (std::is_invocable_v<Functor>) {
                 func();
             }
-            else func(as_ok());
+            else func(unwrap());
         }
         return *this;
     }
@@ -291,7 +302,7 @@ public:
             if constexpr (std::is_invocable_v<Functor>) {
                 func();
             }
-            else func(as_error());
+            else func(unwrap_error());
         }
         return *this;
     }
